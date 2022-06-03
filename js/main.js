@@ -188,5 +188,10 @@ window.addEventListener("load", function() {
                 </tr> `;
             })
       }
+
+      for(let i=0;i<localStorage.length;i++)
+      {
+          console.log(i+": "+localStorage.key(i)+":"+localStorage.getItem(localStorage.key(i)));
+      }
     }
 );
