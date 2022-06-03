@@ -48,6 +48,15 @@ especificar a cual desde eñ 0. */
 <td>$ 25</td>
 </tr> `;*/
 
+// let agregar=document.getElementById("btnAgregar");
+// console.log(agregar)
+let contador=0;
+let costoTotal=0;
+let datos=[];
+let agregar=document.getElementById("btnAgregar");
+let total=document.getElementById("totalPagar");
+let totalEnProductos=0;
+
 function validarNombre()
 {
     if(txtNombre.value.lenght <3){return false;}
@@ -62,13 +71,7 @@ function validarCantidad()
     return true;
 }
 
-// let agregar=document.getElementById("btnAgregar");
-// console.log(agregar)
-let contador=0;
-let costoTotal=0;
-let agregar=document.getElementById("btnAgregar");
-let total=document.getElementById("totalPagar");
-let totalEnPoductos=0;
+
 
 //agregar.addEventListener("click",(event)=>{console.log("Click en el boton agregar", event);}); //con event.target mada el bottom en codigo HTML
 //con function aparte tambien se puede
@@ -110,19 +113,36 @@ agregar.addEventListener("click",(event)=>{
 
     contador++;
     document.getElementById("contadorProductos").innerHTML=contador; //se asigna el valor 
+    localStorage.setItem ("contadorProductos", contador);
     let precio=(Math.floor((Math.random()*50)*100))/100;
     let cantidad=parseFloat(txtNumber.value);
+
+    totalEnProductos += (cantidad<1)?Math.ceil(cantidad):parseInt(cantidad);
+    document.getElementById("productosTotal").innerHTML = totalEnProductos;  
+    localStorage.setItem ("productosTotal", totalEnProductos);
     costoTotal +=(precio*cantidad);
-    totalEnPoductos+= (cantidad<1)?Math.ceil(cantidad):parseInt(cantidad);
-    document.getElementById("productosTotal").innerHTML=totalEnPoductos;
-    total.innerHTML=`$ ${costoTotal.toFixed(2)}`
+    total.innerHTML=`$ ${costoTotal.toFixed(2)}`;
+    localStorage.setItem("precioTotal", costoTotal.toFixed(2));
+
+    //JSON
+    let elemento=`{"id":${contador},
+     "nombre":"${txtNombre.value}",
+     "cantidad": ${txtNumber.value}, 
+     "precio":${precio}
+    }`;
+    //cantidad tambien entre comillas si no muestra en datos. 
+
+    datos.push(JSON.parse(elemento));
+    localStorage.setItem("elementosTabla", JSON.stringify(datos)); //elementos tabla es el nombre con se identifica
+    console.log(datos);
+
     let tmp=`<tr>  
     <th scope="row">${contador}</th>
     <td>${txtNombre.value}</td>
     <td>${txtNumber.value}</td>
     <td>$ ${precio}</td>
     </tr> `;
-    console.log(tmp);
+
     bodyTabla[0].innerHTML +=tmp;
     //console.log(txtNombre.value,txtNumber.value);
     txtNombre.value="";
@@ -155,5 +175,18 @@ window.addEventListener("load", function() {
         costoTotal = parseFloat(localStorage.getItem ("precioTotal"));
         total.innerHTML = costoTotal;
       }//if precioTotal
+      if(localStorage.getItem("elementosTabla")!=null)
+      {
+          datos=JSON.parce(localStorage.getItem("elementosTabla"));
+          datos.forEach(element =>
+            {
+                bodyTabla[0].innerHTML += `<tr>  
+                <th scope="row">${element.id}</th>
+                <td>${element.nombre}</td>
+                <td>${element.cantidad}</td>
+                <td>$ ${element.precio}</td>
+                </tr> `;
+            })
+      }
     }
 );
