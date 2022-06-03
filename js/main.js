@@ -113,7 +113,7 @@ agregar.addEventListener("click",(event)=>{
     let precio=(Math.floor((Math.random()*50)*100))/100;
     let cantidad=parseFloat(txtNumber.value);
     costoTotal +=(precio*cantidad);
-    totalEnPoductos+= Math.ceil(cantidad);
+    totalEnPoductos+= (cantidad<1)?Math.ceil(cantidad):parseInt(cantidad);
     document.getElementById("productosTotal").innerHTML=totalEnPoductos;
     total.innerHTML=`$ ${costoTotal.toFixed(2)}`
     let tmp=`<tr>  
@@ -141,3 +141,19 @@ txtNombre.addEventListener("blur", (event)=>{
 txtNumber.addEventListener("blur", (event)=>{
     event.target.value=event.target.value.trim();
 });
+
+window.addEventListener("load", function() {
+    if (localStorage.getItem ("contadorProductos")!=null)   {
+        contador = parseInt(localStorage.getItem ("contadorProductos"));
+        document.getElementById("contadorProductos").innerHTML=contador;
+    }//if  contadorProductos
+     if (localStorage.getItem ("productosTotal")){
+        totalEnProductos = parseInt(localStorage.getItem ("productosTotal"));
+        document.getElementById("productosTotal").innerHTML = totalEnProductos; 
+     } //if productosTotal
+      if (localStorage.getItem ("precioTotal")){
+        costoTotal = parseFloat(localStorage.getItem ("precioTotal"));
+        total.innerHTML = costoTotal;
+      }//if precioTotal
+    }
+);
