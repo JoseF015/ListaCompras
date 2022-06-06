@@ -53,21 +53,33 @@ especificar a cual desde eñ 0. */
 let contador=0;
 let costoTotal=0;
 let datos=[];
-let agregar=document.getElementById("btnAgregar");
+
 let total=document.getElementById("totalPagar");
 let totalEnProductos=0;
 
 function validarNombre()
 {
-    if(txtNombre.value.lenght <3){return false;}
+    if(txtNombre.value.length <3)
+    {
+        return false;
+    }
     return true;
 }
 
 function validarCantidad()
 {
-    if(txtNumber.value.lenght==0){return false;}
-    if(isNaN(txtNumber.value)){return false;}
-    if(parseFloat(txtNumber.value)<=0){return false;}
+    if(txtNumber.value.length==0)
+    {
+        return false;
+    }
+    if(isNaN(txtNumber.value))
+    {
+        return false;
+    }
+    if(parseFloat(txtNumber.value)<=0)
+    {
+        return false;
+    }
     return true;
 }
 
@@ -75,6 +87,7 @@ function validarCantidad()
 
 //agregar.addEventListener("click",(event)=>{console.log("Click en el boton agregar", event);}); //con event.target mada el bottom en codigo HTML
 //con function aparte tambien se puede
+let agregar=document.getElementById("btnAgregar");
 agregar.addEventListener("click",(event)=>{
     event.preventDefault();
    
@@ -90,17 +103,18 @@ agregar.addEventListener("click",(event)=>{
 
         if(!validarCantidad())
         {
-            txtNombre.style.border="red thin solid";
+            txtNumber.style.border="red thin solid";
             lista+="<li>Se debe escribir una cantidad válida</li>"
         }
-        document.getElementById("alertValidText").innerHTML=`Los campos deben ser llenados correctamente. <ul>${lista}</ul>`;
+        document.getElementById("alertValidText").innerHTML=`
+        Los campos deben ser llenados correctamente. <ul>${lista}</ul>`;
         
         document.getElementById("alertValidacion").style.display="block";
 
         setTimeout(function()
         {
             document.getElementById("alertValidacion").style.display="none";
-        }, 5000);
+        }, 3000);
 
         return false;
     }
@@ -125,15 +139,16 @@ agregar.addEventListener("click",(event)=>{
     localStorage.setItem("precioTotal", costoTotal.toFixed(2));
 
     //JSON
-    let elemento=`{"id":${contador},
-     "nombre":"${txtNombre.value}",
-     "cantidad": ${txtNumber.value}, 
-     "precio":${precio}
+    let elemento=`{"id":${contador}, 
+        "nombre": "${txtNombre.value}", 
+        "cantidad": ${txtNumber.value}, 
+        "precio":${precio}
     }`;
-    //cantidad tambien entre comillas si no muestra en datos. 
 
     datos.push(JSON.parse(elemento));
-    localStorage.setItem("elementosTabla", JSON.stringify(datos)); //elementos tabla es el nombre con se identifica
+
+    localStorage.setItem("elementosTabla",  JSON.stringify(datos) );
+
     console.log(datos);
 
     let tmp=`<tr>  
@@ -177,7 +192,7 @@ window.addEventListener("load", function() {
       }//if precioTotal
       if(localStorage.getItem("elementosTabla")!=null)
       {
-          datos=JSON.parce(localStorage.getItem("elementosTabla"));
+          datos=JSON.parse(localStorage.getItem("elementosTabla"));
           datos.forEach(element =>
             {
                 bodyTabla[0].innerHTML += `<tr>  
@@ -186,7 +201,7 @@ window.addEventListener("load", function() {
                 <td>${element.cantidad}</td>
                 <td>$ ${element.precio}</td>
                 </tr> `;
-            })
+            });
       }
 
       for(let i=0;i<localStorage.length;i++)
